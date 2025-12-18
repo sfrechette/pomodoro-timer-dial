@@ -248,8 +248,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [M5Stack for the Dial v1.1](https://shop.m5stack.com/products/m5stack-dial-v1-1) hardware platform
-- [PlatformIO] (https://platformio.org/) for the development environment
+- [M5Stack for the Dial v1.1](https://shop.m5stack.com/products/m5stack-dial-v1-1) hardware device platform
+- [PlatformIO](https://platformio.org/) for the development environment
 
 ## Support
 

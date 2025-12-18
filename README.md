@@ -1,10 +1,11 @@
-# Pomodoro Timer Dial 🍅
+# Pomodoro Timer Dial
 
-A modular and efficient Pomodoro timer implementation for the M5Stack Dial (ESP32-S3).
+A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial (ESP32-S3).
 
 ## Features
 
 ### Timer Functionality
+
 - **Customizable work sessions** (1-25 minutes via dial)
 - **Short breaks** after each pomodoro (default 5 minutes)
 - **Long breaks** after 4 pomodoros (default 25 minutes)
@@ -12,18 +13,20 @@ A modular and efficient Pomodoro timer implementation for the M5Stack Dial (ESP3
 - **Audio alerts**: Buzzer sounds when timer completes
 
 ### User Interface
+
 - **Rotary dial input**: Adjust timer duration smoothly
 - **Button controls**:
   - Short press (<2s): Start / Pause / Resume
   - Long press (>2s): Reset to Ready state
 - **Touch input**: Tap gear icon to access settings
-- **Visual feedback**: 
+- **Visual feedback**:
   - Color-coded states (Red=Work, Green=Short Break, Orange=Long Break)
   - Progress circle animation
   - Pomodoro counter with tomato icons
   - Status text display
 
 ### Settings Menu
+
 - Work Duration (1-60 minutes)
 - Short Break Duration (1-60 minutes)
 - Long Break Duration (1-60 minutes)
@@ -60,12 +63,14 @@ src/
 ## Installation
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/sfrechette/pomodoro-timer-dial.git
 cd pomodoro-timer-dial
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 # PlatformIO will automatically install required libraries:
 # - M5Dial
@@ -75,16 +80,19 @@ cd pomodoro-timer-dial
 ```
 
 ### 3. Upload Filesystem (Images)
+
 ```bash
 pio run --target uploadfs
 ```
 
 ### 4. Upload Firmware
+
 ```bash
 pio run --target upload
 ```
 
 ### 5. Monitor Serial Output (Optional)
+
 ```bash
 pio device monitor
 ```
@@ -112,6 +120,7 @@ pio device monitor
 ### Smart Breaks
 
 When you adjust the work duration using the dial in Ready state:
+
 - **Short Break** = Work Duration ÷ 5
 - **Long Break** = Same as Work Duration
 
@@ -124,6 +133,7 @@ Custom break durations set in Settings menu will be preserved until you adjust w
 Edit `src/config.h` to customize:
 
 ### Display Settings
+
 ```cpp
 constexpr uint16_t SCREEN_WIDTH = 240;
 constexpr uint16_t SCREEN_HEIGHT = 240;
@@ -132,6 +142,7 @@ constexpr uint8_t CIRCLE_THICKNESS = 12;
 ```
 
 ### Timer Defaults
+
 ```cpp
 constexpr uint16_t DEFAULT_WORK_DURATION = 25 * 60;        // 25 minutes
 constexpr uint16_t DEFAULT_SHORT_BREAK = 5 * 60;           // 5 minutes
@@ -140,6 +151,7 @@ constexpr uint8_t DEFAULT_POMODOROS_UNTIL_LONG = 4;
 ```
 
 ### Colors
+
 All colors are defined using RGB565 format in `Config::Colors` namespace.
 
 ## Project Structure
@@ -163,22 +175,27 @@ pomodoro-timer-dial/
 ## Development
 
 ### Building
+
 ```bash
 pio run
 ```
 
 ### Uploading
+
 ```bash
 pio run --target upload
 ```
 
 ### Cleaning Build Files
+
 ```bash
 pio run --target clean
 ```
 
 ### Serial Debugging
+
 The application outputs helpful debug information to serial monitor at 115200 baud:
+
 ```bash
 pio device monitor --baud 115200
 ```
@@ -186,57 +203,49 @@ pio device monitor --baud 115200
 ## Troubleshooting
 
 ### Gear Icon Shows White Box
+
 Make sure you uploaded the filesystem before the firmware:
+
 ```bash
 pio run --target uploadfs
 pio run --target upload
 ```
 
 ### Buzzer Not Working
+
 - Ensure speaker is not muted in M5Dial hardware
 - Check that timer is completing properly (watch serial monitor)
 
 ### Display Issues
+
 - Try adjusting brightness in setup (default: 100)
 - Ensure SPIFFS mounted successfully (check serial output)
 
 ### Compilation Errors
+
 - Clean build and try again: `pio run --target clean && pio run`
 - Verify PlatformIO libraries are up to date
 
 ## Performance
 
 The modularized architecture with performance optimizations provides:
+
 - **Efficient rendering**: Frame-rate limited to 60 FPS, only redraws changed elements
 - **Responsive input**: Debounced encoder with 5ms filtering, non-blocking button handling
 - **Adaptive timing**: 40% CPU reduction during idle states
 - **Low memory usage**: ~22KB RAM (6.8%), ~505KB Flash (15%)
 - **Smooth animations**: Consistent frame timing with smart redrawing
 
-### Performance Features:
+### Performance Features
+
 - ✅ Encoder debouncing (5ms) with threshold filtering
 - ✅ Adaptive loop timing (10ms active, 20ms idle)
 - ✅ Frame rate limiting (~60 FPS max)
 - ✅ Optional performance monitoring (debug mode)
 
-See [`PERFORMANCE_OPTIMIZATIONS.md`](PERFORMANCE_OPTIMIZATIONS.md) for detailed information.
-
 ## License
 
-This project is open source. Feel free to use, modify, and distribute.
-
-## Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## Author
-
-**Stéphane Fréchette** (@sfrechette)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -244,7 +253,8 @@ Contributions are welcome! Please:
 - PlatformIO for the development environment
 - Arduino framework for ESP32
 
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/sfrechette/pomodoro-timer-dial/issues)
+
 ---
-
-**Enjoy your productive Pomodoro sessions!** 🍅⏱️
-

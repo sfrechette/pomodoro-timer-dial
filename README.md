@@ -7,10 +7,10 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
 ![Platform](https://img.shields.io/badge/Platform-PlatformIO-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-![Architecture diagram](docs/images/focusing.JPEG)
-![Architecture diagram](docs/images/paused.JPEG)
-![Architecture diagram](docs/images/shortbreak.JPEG)
-![Architecture diagram](docs/images/longbreak.JPEG)
+![focus image](docs/images/focusing.JPEG)
+![paused image](docs/images/paused.JPEG)
+![short break image](docs/images/shortbreak.JPEG)
+![long break image](docs/images/longbreak.JPEG)
 
 
 ## Features
@@ -254,7 +254,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [M5Stack for the Dial v1.1](https://shop.m5stack.com/products/m5stack-dial-v1-1) hardware device platform
+- [M5Stack for the Dial v1.1](https://shop.m5stack.com/products/m5stack-dial-v1-1) hardware, microcontroller device
 - [PlatformIO](https://platformio.org/) for the development environment
 
 ## Support

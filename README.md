@@ -1,6 +1,6 @@
 # Pomodoro Timer Dial
 
-A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial (ESP32-S3).
+A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial v1.1 (ESP32-S3).
 
 ![Hardware](https://img.shields.io/badge/Hardware-M5Stack-red)
 ![ESP32-S3](https://img.shields.io/badge/ESP32-S3-blue)
@@ -248,9 +248,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- M5Stack for the M5Dial hardware platform
-- PlatformIO for the development environment
-- Arduino framework for ESP32
+- [M5Stack for the Dial v1.1](https://shop.m5stack.com/products/m5stack-dial-v1-1) hardware platform
+- [PlatformIO] (https://platformio.org/) for the development environment
 
 ## Support
 

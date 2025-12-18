@@ -75,7 +75,7 @@ void InputHandler::handleEncoderInput(TimerState& currentState,
                 // Short Break Duration (adjust by 60 seconds)
                 int32_t newVal = settings.shortBreakDuration + (delta * 60);
                 if (newVal < 60) newVal = 60;      // Minimum 1 minute
-                if (newVal > 1800) newVal = 1800;  // Maximum 30 minutes
+                if (newVal > 3600) newVal = 3600;  // Maximum 60 minutes
                 settings.shortBreakDuration = newVal;
             } else if (settingsMenuIndex == 2) {
                 // Long Break Duration (adjust by 60 seconds)

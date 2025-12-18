@@ -25,9 +25,9 @@ A modular and efficient Pomodoro timer implementation for the M5Stack Dial (ESP3
 
 ### Settings Menu
 - Work Duration (1-60 minutes)
-- Short Break Duration (1-30 minutes)
+- Short Break Duration (1-60 minutes)
 - Long Break Duration (1-60 minutes)
-- Pomodoros Until Long Break (2-8 sessions)
+- Pomodoros Until Long Break (1-10 sessions)
 
 ## Hardware Requirements
 

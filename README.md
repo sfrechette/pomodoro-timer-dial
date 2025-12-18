@@ -2,6 +2,11 @@
 
 A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial (ESP32-S3).
 
+![Hardware](https://img.shields.io/badge/M5Stack-red)
+![ESP32-S3](https://img.shields.io/badge/ESP32-S3-blue)
+![Platform](https://img.shields.io/badge/Platform-PlatformIO-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 ## Features
 
 ### Timer Functionality
@@ -32,13 +37,7 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
 - Long Break Duration (1-60 minutes)
 - Pomodoros Until Long Break (1-10 sessions)
 
-## Hardware Requirements
-
-- **M5Stack Dial** (ESP32-S3 based)
-- USB-C cable for programming
-- Computer with PlatformIO installed
-
-## Software Architecture
+## Architecture Overview
 
 The project is organized into modular components for maintainability and efficiency:
 

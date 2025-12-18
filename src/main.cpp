@@ -260,7 +260,6 @@ void loop() {
     
     delay(10);
 }
-
 void drawCircularProgress(float progress, uint16_t color) {
     // Draw a static full white circle ring (no progress updates)
     uint16_t bgColor = getStateBackgroundColor();
@@ -930,3 +929,4 @@ uint16_t getShortBreakDuration() {
 uint16_t getLongBreakDuration() {
     return settings.longBreakDuration;
 }
+

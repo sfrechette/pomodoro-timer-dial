@@ -1,4 +1,4 @@
-# Pomodoro Timer Dial
+# Pomodoro Timer Dial for M5Stack Dial v1.1
 
 A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial v1.1 (ESP32-S3).
 

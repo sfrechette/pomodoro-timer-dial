@@ -39,6 +39,11 @@ private:
     bool buttonPressed;
     bool longPressHandled;
     
+    // Performance optimization - encoder debouncing
+    uint32_t lastEncoderChangeTime;
+    static constexpr uint32_t ENCODER_DEBOUNCE_MS = 10;  // Balanced for smoothness and responsiveness
+    static constexpr int32_t ENCODER_THRESHOLD = 1;       // Minimum encoder delta to process
+    
     // Internal handlers
     void handleEncoderInput(TimerState& currentState,
                            PomodoroSettings& settings,

@@ -10,7 +10,8 @@ InputHandler::InputHandler()
     : lastEncoderPos(0),
       buttonPressTime(0),
       buttonPressed(false),
-      longPressHandled(false) {
+      longPressHandled(false),
+      lastEncoderChangeTime(0) {
 }
 
 void InputHandler::init() {
@@ -51,9 +52,14 @@ void InputHandler::handleEncoderInput(TimerState& currentState,
     long currentPos = M5Dial.Encoder.read();
     long delta = currentPos - lastEncoderPos;
     
-    if (delta == 0) return;
+    // Performance optimization: Ignore small changes and debounce
+    if (abs(delta) < ENCODER_THRESHOLD) return;
+    
+    uint32_t now = millis();
+    if (now - lastEncoderChangeTime < ENCODER_DEBOUNCE_MS) return;
     
     lastEncoderPos = currentPos;
+    lastEncoderChangeTime = now;
     needsRedraw = true; // Mark that we need to redraw
     
     if (currentState == STATE_SETTINGS) {
@@ -179,9 +185,10 @@ void InputHandler::handleTouchInput(TimerState& currentState,
         int16_t touchY = touch.y;
         
         // Check if touch is in the gear icon area (bottom center)
-        // Gear is at bottom: x = CENTER_X-15 to CENTER_X+15, y = SCREEN_HEIGHT-35 to SCREEN_HEIGHT-5
-        if (touchX >= CENTER_X - 15 && touchX <= CENTER_X + 15 &&
-            touchY >= SCREEN_HEIGHT - 35 && touchY <= SCREEN_HEIGHT - 5) {
+        // Increased touch area for better responsiveness: 40x40 pixel area
+        // Gear is at bottom: x = CENTER_X-20 to CENTER_X+20, y = SCREEN_HEIGHT-45 to SCREEN_HEIGHT
+        if (touchX >= CENTER_X - 20 && touchX <= CENTER_X + 20 &&
+            touchY >= SCREEN_HEIGHT - 45 && touchY <= SCREEN_HEIGHT) {
             // Touch on gear icon = open settings
             if (currentState != STATE_SETTINGS) {
                 currentState = STATE_SETTINGS;

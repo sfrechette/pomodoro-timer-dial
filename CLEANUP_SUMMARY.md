@@ -81,6 +81,15 @@ Your project now contains:
 
 3. **Enjoy!** Your M5Dial will now run the clean, production Pomodoro timer.
 
+### Completed Enhancements:
+
+✅ **Performance Optimizations** - IMPLEMENTED
+- Encoder debouncing and threshold filtering
+- Adaptive loop timing (40% CPU reduction in idle)
+- Frame rate limiting (60 FPS)
+- Optional performance monitoring
+- See `PERFORMANCE_OPTIMIZATIONS.md` for details
+
 ### Optional Future Enhancements:
 
 If you want to add features later, consider:

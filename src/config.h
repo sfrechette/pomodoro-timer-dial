@@ -20,6 +20,22 @@ const int16_t CIRCLE_THICKNESS = 8;
 // Set to true to show the white circle, false to hide it
 const bool SHOW_WHITE_CIRCLE = false;
 
+// ==================== PERFORMANCE SETTINGS ====================
+// Loop timing (milliseconds)
+const uint8_t LOOP_DELAY_ACTIVE = 10;    // Delay when timer running/settings active
+const uint8_t LOOP_DELAY_IDLE = 20;      // Delay when idle/paused (save CPU)
+
+// Encoder settings
+const uint8_t ENCODER_DEBOUNCE_MS = 10;  // Minimum time between encoder reads (balanced)
+const int32_t ENCODER_THRESHOLD = 1;      // Minimum encoder delta to process
+
+// Display optimization
+const uint32_t MIN_REDRAW_INTERVAL_MS = 16; // ~60 FPS max refresh rate
+
+// Debug/Performance Monitoring
+const bool ENABLE_PERFORMANCE_MONITOR = false; // Set true to see performance stats in serial
+const uint32_t PERF_REPORT_INTERVAL_MS = 5000; // Report every 5 seconds
+
 // ==================== COLOR DEFINITIONS ====================
 const uint16_t COLOR_WORK = TFT_RED;
 const uint16_t COLOR_BREAK = TFT_GREEN;

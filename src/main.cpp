@@ -81,6 +81,15 @@ void setup() {
 void loop() {
     M5Dial.update();
     
+    // Performance monitoring (optional debug mode)
+    #if ENABLE_PERFORMANCE_MONITOR
+    static uint32_t loopCount = 0;
+    static uint32_t lastPerfReport = 0;
+    static uint32_t redrawCount = 0;
+    static uint32_t skippedFrames = 0;
+    loopCount++;
+    #endif
+    
     // Get current timer values for input handler
     uint32_t timerRemaining = timerManager.getRemaining();
     uint32_t timerDuration = timerManager.getDuration();
@@ -130,7 +139,16 @@ void loop() {
     }
     
     // Redraw display when needed
-    if (shouldRedraw) {
+    // Performance optimization: Frame rate limiting
+    static uint32_t lastRedrawTime = 0;
+    uint32_t redrawNow = millis();
+    bool canRedraw = (redrawNow - lastRedrawTime >= MIN_REDRAW_INTERVAL_MS);
+    
+    if (shouldRedraw && canRedraw) {
+        lastRedrawTime = redrawNow;
+        #if ENABLE_PERFORMANCE_MONITOR
+        redrawCount++;
+        #endif
         switch (currentState) {
             case STATE_IDLE:
             case STATE_RUNNING:
@@ -159,8 +177,33 @@ void loop() {
         lastDisplayedSeconds = currentRemaining;
         lastDisplayedState = currentState;
         needsRedraw = false;
+    } else if (shouldRedraw && !canRedraw) {
+        #if ENABLE_PERFORMANCE_MONITOR
+        skippedFrames++;
+        #endif
     }
     
+    // Performance monitoring: Periodic reporting
+    #if ENABLE_PERFORMANCE_MONITOR
+    uint32_t now = millis();
+    if (now - lastPerfReport >= PERF_REPORT_INTERVAL_MS) {
+        float fps = (float)loopCount / (float)(now - lastPerfReport) * 1000.0f;
+        float redrawFps = (float)redrawCount / (float)(now - lastPerfReport) * 1000.0f;
+        Serial.println("\n═══ PERFORMANCE STATS ═══");
+        Serial.print("Loop FPS: "); Serial.println(fps, 1);
+        Serial.print("Redraw FPS: "); Serial.println(redrawFps, 1);
+        Serial.print("Skipped Frames: "); Serial.println(skippedFrames);
+        Serial.print("Free Heap: "); Serial.print(ESP.getFreeHeap()); Serial.println(" bytes");
+        Serial.println("═══════════════════════════\n");
+        
+        loopCount = 0;
+        redrawCount = 0;
+        skippedFrames = 0;
+        lastPerfReport = now;
+    }
+    #endif
+    
+    // Balanced loop delay for responsiveness and efficiency
     delay(10);
 }
 

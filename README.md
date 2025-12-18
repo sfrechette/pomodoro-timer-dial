@@ -9,12 +9,12 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
 
 ## Features
 
-### Timer Functionality
+### Timer Functionality (defaults)
 
-- **Customizable work sessions** (1-25 minutes via dial)
+- **Customizable work sessions** (1-25 minutes via dial - default is 25 minutes)
 - **Short breaks** after each pomodoro (default 5 minutes)
-- **Long breaks** after 4 pomodoros (default 25 minutes)
-- **Smart break calculation**: Automatically calculates breaks based on work duration (1/5 rule)
+- **Long breaks** after 4 pomodoros (default 25 minutes - same as work session)
+- **Short smart break calculation**: Automatically calculates breaks based on work duration (1/5 rule)
 - **Audio alerts**: Buzzer sounds when timer completes
 
 ### User Interface
@@ -30,7 +30,7 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
   - Pomodoro counter with tomato icons
   - Status text display
 
-### Settings Menu
+### Settings Menu (customization) via the gear icon
 
 - Work Duration (1-60 minutes)
 - Short Break Duration (1-60 minutes)
@@ -237,10 +237,10 @@ The modularized architecture with performance optimizations provides:
 
 ### Performance Features
 
-- ✅ Encoder debouncing (5ms) with threshold filtering
-- ✅ Adaptive loop timing (10ms active, 20ms idle)
-- ✅ Frame rate limiting (~60 FPS max)
-- ✅ Optional performance monitoring (debug mode)
+- Encoder debouncing (5ms) with threshold filtering
+- Adaptive loop timing (10ms active, 20ms idle)
+- Frame rate limiting (~60 FPS max)
+- Optional performance monitoring (debug mode)
 
 ## License
 

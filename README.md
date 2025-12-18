@@ -7,10 +7,10 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
 ![Platform](https://img.shields.io/badge/Platform-PlatformIO-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-![Architecture diagram](docs/images/IMG_0897.png)
-![Architecture diagram](docs/images/IMG_0898.png)
-![Architecture diagram](docs/images/IMG_0899.png)
-![Architecture diagram](docs/images/IMG_0900.png)
+![Architecture diagram](docs/images/IMG_0897.JPEG)
+![Architecture diagram](docs/images/IMG_0898.JPEG)
+![Architecture diagram](docs/images/IMG_0899.JPEG)
+![Architecture diagram](docs/images/IMG_0900.JPEG)
 
 
 ## Features

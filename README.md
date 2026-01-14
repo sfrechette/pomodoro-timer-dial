@@ -2,7 +2,7 @@
 
 A modular, customizable and efficient Pomodoro timer implementation for the M5Stack Dial v1.1 (ESP32-S3).
 
-![Hardware](https://img.shields.io/badge/Hardware-M5Stack-red)
+![Hardware](https://img.shields.io/static/v1?label=Hardware&message=M5Stack%20Dial%20v1.1&color=red)
 ![ESP32-S3](https://img.shields.io/badge/ESP32-S3-blue)
 ![Platform](https://img.shields.io/badge/Platform-PlatformIO-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)

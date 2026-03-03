@@ -117,10 +117,10 @@ void Display::drawStatusText(const char* text, uint16_t color, TimerState state,
         M5Dial.Display.fillRect(CENTER_X - 15, iconY - 15, 30, 30, bgColor);
         
         // Load and draw gear icon from SPIFFS
-        File file = SPIFFS.open("/gear.png", "r");
-        if (file) {
-            file.seek(0);
-            bool result = M5Dial.Display.drawPng(&file, iconX, iconYPos);
+        File gearFile = SPIFFS.open("/gear.png", "r");
+        if (gearFile) {
+            bool result = M5Dial.Display.drawPng(&gearFile, iconX, iconYPos);
+            gearFile.close();
             if (!result) {
                 Serial.println("PNG draw failed - using fallback");
                 M5Dial.Display.setTextColor(TFT_WHITE);
@@ -130,7 +130,6 @@ void Display::drawStatusText(const char* text, uint16_t color, TimerState state,
             } else {
                 Serial.println("Gear PNG drawn successfully");
             }
-            file.close();
         } else {
             Serial.println("Failed to open gear.png - using fallback");
             M5Dial.Display.setTextColor(TFT_WHITE);
@@ -186,32 +185,19 @@ void Display::drawTomatoIcon(TimerState state) {
     int16_t iconX = CENTER_X - iconSize/2;
     int16_t iconYPos = iconY - iconSize/2;
     
-    // Use M5GFX's drawPng to load PNG from SPIFFS with transparency support
-    // Position centered horizontally
-    File file = SPIFFS.open("/pomodoro.png", "r");
-    if (file) {
-        Serial.print("Opening pomodoro.png, size: ");
-        Serial.println(file.size());
-        Serial.print("Drawing at position: ");
-        Serial.print(iconX);
-        Serial.print(", ");
-        Serial.println(iconYPos);
-        // Reset file pointer to beginning
-        file.seek(0);
-        // M5GFX drawPng automatically handles transparency from PNG alpha channel
-        bool result = M5Dial.Display.drawPng(&file, iconX, iconYPos);
+    // Use M5GFX's drawPng via Stream to load PNG from SPIFFS with transparency support
+    File tomatoFile = SPIFFS.open("/pomodoro.png", "r");
+    if (tomatoFile) {
+        bool result = M5Dial.Display.drawPng(&tomatoFile, iconX, iconYPos);
+        tomatoFile.close();
         if (!result) {
             Serial.println("Failed to draw PNG");
-            // Draw a red rectangle as fallback to verify position
             M5Dial.Display.fillRect(iconX, iconYPos, iconSize, iconSize, TFT_RED);
         } else {
             Serial.println("PNG drawn successfully");
         }
-        file.close();
     } else {
         Serial.println("Failed to open /pomodoro.png from SPIFFS");
-        // Draw a simple placeholder rectangle to verify position
-        uint16_t bgColor = getStateBackgroundColor(state, state);
         M5Dial.Display.fillRect(iconX, iconYPos, iconSize, iconSize, TFT_RED);
     }
 }
@@ -233,20 +219,21 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
     int16_t yPos = 50;
     
     // Clear the menu area before redrawing to remove old highlights
-    M5Dial.Display.fillRect(0, 40, SCREEN_WIDTH, 140, COLOR_BG);
-    
+    M5Dial.Display.fillRect(0, 40, SCREEN_WIDTH, 165, COLOR_BG);
+
     const char* menuItems[] = {
         "Work Duration",
         "Short Break",
         "Long Break",
         "Pomodoros/Long",
+        "Brightness",
         "Back"
     };
-    
-    for (uint8_t i = 0; i < 5; i++) {
+
+    for (uint8_t i = 0; i < 6; i++) {
         // Clear the specific line area first
         M5Dial.Display.fillRect(10, yPos - 2, SCREEN_WIDTH - 20, 18, COLOR_BG);
-        
+
         // Draw highlight only for selected item
         if (i == menuIndex) {
             M5Dial.Display.fillRect(10, yPos - 2, SCREEN_WIDTH - 20, 18, COLOR_PROGRESS_BG);
@@ -254,7 +241,7 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
         } else {
             M5Dial.Display.setTextColor(COLOR_TEXT);
         }
-        
+
         char line[50];
         if (i == 0) {
             // Work Duration - editable
@@ -268,11 +255,14 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
         } else if (i == 3) {
             // Pomodoros until long break - editable
             snprintf(line, sizeof(line), "%s: %d", menuItems[i], settings.pomodorosUntilLongBreak);
+        } else if (i == 4) {
+            // Brightness level - editable
+            snprintf(line, sizeof(line), "%s: Level %d/6", menuItems[i], settings.brightnessLevel);
         } else {
             // Back
             snprintf(line, sizeof(line), "%s", menuItems[i]);
         }
-        
+
         M5Dial.Display.drawString(line, CENTER_X, yPos);
         yPos += 25;
     }

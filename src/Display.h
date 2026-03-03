@@ -7,8 +7,8 @@
 #define DISPLAY_H
 
 #include <Arduino.h>
-#include <M5Dial.h>
 #include <SPIFFS.h>
+#include <M5Dial.h>
 #include "config.h"
 #include "types.h"
 

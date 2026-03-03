@@ -16,7 +16,8 @@ PomodoroSettings settings = {
     .workDuration = 25 * 60,           // 25 minutes
     .shortBreakDuration = 5 * 60,      // 5 minutes
     .longBreakDuration = 25 * 60,      // 25 minutes
-    .pomodorosUntilLongBreak = 4
+    .pomodorosUntilLongBreak = 4,
+    .brightnessLevel = 3               // Mid brightness (level 3 of 6)
 };
 
 uint8_t completedPomodoros = 0;
@@ -66,7 +67,7 @@ void setup() {
         }
     }
     
-    M5Dial.Display.setBrightness(100);
+    M5Dial.Display.setBrightness((settings.brightnessLevel * 255) / 6);
     M5Dial.Display.setRotation(0);
     M5Dial.Display.fillScreen(COLOR_WORK_BG); // Start with red background
     

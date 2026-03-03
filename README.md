@@ -42,6 +42,7 @@ A modular, customizable and efficient Pomodoro timer implementation for the M5St
 - Short Break Duration (1-60 minutes)
 - Long Break Duration (1-60 minutes)
 - Pomodoros Until Long Break (1-10 sessions)
+- Display Brightness (6 levels, applied live as you adjust)
 
 ## Architecture Overview
 
@@ -223,7 +224,7 @@ pio run --target upload
 
 ### Display Issues
 
-- Try adjusting brightness in setup (default: 100)
+- Adjust brightness via Settings → Brightness (6 levels, default: Level 3)
 - Ensure SPIFFS mounted successfully (check serial output)
 
 ### Compilation Errors

@@ -89,13 +89,20 @@ void InputHandler::handleEncoderInput(TimerState& currentState,
                 if (newVal < 1) newVal = 1;
                 if (newVal > 10) newVal = 10;
                 settings.pomodorosUntilLongBreak = newVal;
+            } else if (settingsMenuIndex == 4) {
+                // Brightness level (1-6 range)
+                int16_t newVal = settings.brightnessLevel + delta;
+                if (newVal < 1) newVal = 1;
+                if (newVal > 6) newVal = 6;
+                settings.brightnessLevel = newVal;
+                M5Dial.Display.setBrightness((settings.brightnessLevel * 255) / 6);
             }
         } else {
             // Navigate menu
             if (delta > 0) {
-                settingsMenuIndex = (settingsMenuIndex + 1) % 5;
+                settingsMenuIndex = (settingsMenuIndex + 1) % 6;
             } else {
-                settingsMenuIndex = (settingsMenuIndex + 4) % 5;
+                settingsMenuIndex = (settingsMenuIndex + 5) % 6;
             }
         }
     } else if (currentState == STATE_IDLE) {
@@ -237,7 +244,7 @@ void InputHandler::handleButtonPress(TimerState& currentState,
             break;
             
         case STATE_SETTINGS:
-            if (settingsMenuIndex == 4) {
+            if (settingsMenuIndex == 5) {
                 // Back to main screen - force full screen clear to prevent overlap
                 uint16_t bgColor = COLOR_WORK_BG; // Red background for idle
                 M5Dial.Display.fillScreen(bgColor);
@@ -247,8 +254,8 @@ void InputHandler::handleButtonPress(TimerState& currentState,
                 }
                 needsRedraw = true;
                 Serial.println("Exiting Settings -> Idle");
-            } else if (settingsMenuIndex >= 0 && settingsMenuIndex <= 3) {
-                // Allow editing all settings: Work Duration, Short Break, Long Break, and Pomodoros/Long
+            } else if (settingsMenuIndex >= 0 && settingsMenuIndex <= 4) {
+                // Allow editing all settings: Work Duration, Short Break, Long Break, Pomodoros/Long, Brightness
                 settingsEditing = !settingsEditing;
             }
             break;

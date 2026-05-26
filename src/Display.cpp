@@ -216,10 +216,10 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
     M5Dial.Display.drawString("Settings", CENTER_X, 10);
     
     M5Dial.Display.setTextSize(1);
-    int16_t yPos = 50;
+    int16_t yPos = 45;
     
     // Clear the menu area before redrawing to remove old highlights
-    M5Dial.Display.fillRect(0, 40, SCREEN_WIDTH, 165, COLOR_BG);
+    M5Dial.Display.fillRect(0, 35, SCREEN_WIDTH, 170, COLOR_BG);
 
     const char* menuItems[] = {
         "Work Duration",
@@ -227,10 +227,11 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
         "Long Break",
         "Pomodoros/Long",
         "Brightness",
+        "Flip Screen",
         "Back"
     };
 
-    for (uint8_t i = 0; i < 6; i++) {
+    for (uint8_t i = 0; i < 7; i++) {
         // Clear the specific line area first
         M5Dial.Display.fillRect(10, yPos - 2, SCREEN_WIDTH - 20, 18, COLOR_BG);
 
@@ -258,6 +259,9 @@ void Display::drawSettingsMenu(const PomodoroSettings& settings, uint8_t menuInd
         } else if (i == 4) {
             // Brightness level - editable
             snprintf(line, sizeof(line), "%s: Level %d/6", menuItems[i], settings.brightnessLevel);
+        } else if (i == 5) {
+            // Flip screen toggle
+            snprintf(line, sizeof(line), "%s: %s", menuItems[i], settings.screenFlipped ? "On" : "Off");
         } else {
             // Back
             snprintf(line, sizeof(line), "%s", menuItems[i]);

@@ -96,13 +96,17 @@ void InputHandler::handleEncoderInput(TimerState& currentState,
                 if (newVal > 6) newVal = 6;
                 settings.brightnessLevel = newVal;
                 M5Dial.Display.setBrightness((settings.brightnessLevel * 255) / 6);
+            } else if (settingsMenuIndex == 5) {
+                // Flip screen toggle
+                settings.screenFlipped = !settings.screenFlipped;
+                M5Dial.Display.setRotation(settings.screenFlipped ? 2 : 0);
             }
         } else {
             // Navigate menu
             if (delta > 0) {
-                settingsMenuIndex = (settingsMenuIndex + 1) % 6;
+                settingsMenuIndex = (settingsMenuIndex + 1) % 7;
             } else {
-                settingsMenuIndex = (settingsMenuIndex + 5) % 6;
+                settingsMenuIndex = (settingsMenuIndex + 6) % 7;
             }
         }
     } else if (currentState == STATE_IDLE) {
@@ -244,7 +248,7 @@ void InputHandler::handleButtonPress(TimerState& currentState,
             break;
             
         case STATE_SETTINGS:
-            if (settingsMenuIndex == 5) {
+            if (settingsMenuIndex == 6) {
                 // Back to main screen - force full screen clear to prevent overlap
                 uint16_t bgColor = COLOR_WORK_BG; // Red background for idle
                 M5Dial.Display.fillScreen(bgColor);
@@ -254,6 +258,12 @@ void InputHandler::handleButtonPress(TimerState& currentState,
                 }
                 needsRedraw = true;
                 Serial.println("Exiting Settings -> Idle");
+            } else if (settingsMenuIndex == 5) {
+                // Flip screen - toggle on button press
+                settings.screenFlipped = !settings.screenFlipped;
+                M5Dial.Display.setRotation(settings.screenFlipped ? 2 : 0);
+                M5Dial.Display.fillScreen(COLOR_BG);
+                needsRedraw = true;
             } else if (settingsMenuIndex >= 0 && settingsMenuIndex <= 4) {
                 // Allow editing all settings: Work Duration, Short Break, Long Break, Pomodoros/Long, Brightness
                 settingsEditing = !settingsEditing;

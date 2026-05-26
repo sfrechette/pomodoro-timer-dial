@@ -25,6 +25,7 @@ struct PomodoroSettings {
     uint16_t longBreakDuration;      // Long break duration in seconds (default: 25 min)
     uint8_t pomodorosUntilLongBreak; // Number of pomodoros before long break (default: 4)
     uint8_t brightnessLevel;         // Display brightness level 1-6 (default: 3)
+    bool screenFlipped;              // Flip display 180 degrees (default: false)
 };
 
 #endif // TYPES_H

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <M5Dial.h>
+#include <Preferences.h>
 #include <math.h>
 #include <string.h>
 #include <SPIFFS.h>
@@ -40,6 +41,33 @@ void pauseTimer();
 void resumeTimer();
 void resetTimer();
 
+// NVS persistence
+Preferences preferences;
+
+void loadSettings() {
+    preferences.begin("pomodoro", true);
+    settings.workDuration = preferences.getUShort("workDur", 25 * 60);
+    settings.shortBreakDuration = preferences.getUShort("shortBreak", 5 * 60);
+    settings.longBreakDuration = preferences.getUShort("longBreak", 25 * 60);
+    settings.pomodorosUntilLongBreak = preferences.getUChar("pomosLong", 4);
+    settings.brightnessLevel = preferences.getUChar("brightness", 3);
+    settings.screenFlipped = preferences.getBool("flipped", false);
+    preferences.end();
+    Serial.println("Settings loaded from NVS");
+}
+
+void saveSettings() {
+    preferences.begin("pomodoro", false);
+    preferences.putUShort("workDur", settings.workDuration);
+    preferences.putUShort("shortBreak", settings.shortBreakDuration);
+    preferences.putUShort("longBreak", settings.longBreakDuration);
+    preferences.putUChar("pomosLong", settings.pomodorosUntilLongBreak);
+    preferences.putUChar("brightness", settings.brightnessLevel);
+    preferences.putBool("flipped", settings.screenFlipped);
+    preferences.end();
+    Serial.println("Settings saved to NVS");
+}
+
 void setup() {
     Serial.begin(115200);
     delay(1000); // Wait for serial to initialize
@@ -67,6 +95,9 @@ void setup() {
             file = root.openNextFile();
         }
     }
+    
+    // Load saved settings from NVS (before applying brightness/rotation)
+    loadSettings();
     
     M5Dial.Display.setBrightness((settings.brightnessLevel * 255) / 6);
     M5Dial.Display.setRotation(settings.screenFlipped ? 2 : 0);
@@ -103,6 +134,11 @@ void loop() {
     inputHandler.processInput(currentState, settings, settingsMenuIndex, settingsEditing,
                               timerRemaining, timerDuration, needsRedraw,
                               startTimer, pauseTimer, resumeTimer, resetTimer);
+    
+    // Persist settings to NVS when exiting settings menu
+    if (oldState == STATE_SETTINGS && currentState != STATE_SETTINGS) {
+        saveSettings();
+    }
     
     // Only sync back if we're in IDLE state (encoder adjustments)
     // If reset happened (state changed to IDLE), re-read values instead

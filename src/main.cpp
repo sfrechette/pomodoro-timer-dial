@@ -9,6 +9,7 @@
 #include "Display.h"
 #include "InputHandler.h"
 #include "TimerManager.h"
+#include "MqttManager.h"
 
 
 // Global Variables
@@ -34,6 +35,7 @@ float lastDisplayedProgress = -1.0;
 Display display;
 InputHandler inputHandler;
 TimerManager timerManager;
+MqttManager mqttManager;
 
 // Function prototypes (callback wrappers for InputHandler)
 void startTimer(uint32_t duration);
@@ -106,6 +108,10 @@ void setup() {
     // Initialize input handler
     inputHandler.init();
     
+    // Initialize MQTT (non-blocking WiFi connect + broker)
+    mqttManager.init();
+    mqttManager.publishSettings(settings);
+    
     // Draw initial screen
     needsRedraw = true;
     resetTimer();
@@ -138,6 +144,7 @@ void loop() {
     // Persist settings to NVS when exiting settings menu
     if (oldState == STATE_SETTINGS && currentState != STATE_SETTINGS) {
         saveSettings();
+        mqttManager.publishSettings(settings);
     }
     
     // Only sync back if we're in IDLE state (encoder adjustments)
@@ -219,6 +226,14 @@ void loop() {
         #if ENABLE_PERFORMANCE_MONITOR
         skippedFrames++;
         #endif
+    }
+    
+    // MQTT: maintain connection and publish state changes
+    mqttManager.update();
+    mqttManager.publishState(currentState);
+    mqttManager.publishCompleted(completedPomodoros);
+    if (currentState == STATE_RUNNING || currentState == STATE_SHORT_BREAK || currentState == STATE_LONG_BREAK) {
+        mqttManager.publishRemaining(currentRemaining);
     }
     
     // Performance monitoring: Periodic reporting

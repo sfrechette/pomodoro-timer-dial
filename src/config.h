@@ -36,6 +36,18 @@ const uint32_t MIN_REDRAW_INTERVAL_MS = 16; // ~60 FPS max refresh rate
 const bool ENABLE_PERFORMANCE_MONITOR = false; // Set true to see performance stats in serial
 const uint32_t PERF_REPORT_INTERVAL_MS = 5000; // Report every 5 seconds
 
+// ==================== WIFI / MQTT SETTINGS ====================
+const char* const WIFI_SSID = "";
+const char* const WIFI_PASSWORD = "";
+const char* const MQTT_SERVER = "192.168.1.*";
+const uint16_t MQTT_PORT = 1883;
+const char* const MQTT_USER = "";
+const char* const MQTT_PASSWORD = "";
+const char* const MQTT_DEVICE_ID = "pomodoro_timer";
+const char* const MQTT_BASE_TOPIC = "pomodoro";
+const uint32_t MQTT_RECONNECT_INTERVAL_MS = 5000;
+const uint32_t WIFI_CONNECT_TIMEOUT_MS = 10000;
+
 // ==================== COLOR DEFINITIONS ====================
 const uint16_t COLOR_WORK = TFT_RED;
 const uint16_t COLOR_BREAK = TFT_GREEN;

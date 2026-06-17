@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <M5Dial.h>
+#include <Preferences.h>
 #include <math.h>
 #include <string.h>
 #include <SPIFFS.h>
@@ -8,6 +9,7 @@
 #include "Display.h"
 #include "InputHandler.h"
 #include "TimerManager.h"
+#include "MqttManager.h"
 
 
 // Global Variables
@@ -17,7 +19,8 @@ PomodoroSettings settings = {
     .shortBreakDuration = 5 * 60,      // 5 minutes
     .longBreakDuration = 25 * 60,      // 25 minutes
     .pomodorosUntilLongBreak = 4,
-    .brightnessLevel = 3               // Mid brightness (level 3 of 6)
+    .brightnessLevel = 3,              // Mid brightness (level 3 of 6)
+    .screenFlipped = false             // Normal orientation
 };
 
 uint8_t completedPomodoros = 0;
@@ -32,12 +35,40 @@ float lastDisplayedProgress = -1.0;
 Display display;
 InputHandler inputHandler;
 TimerManager timerManager;
+MqttManager mqttManager;
 
 // Function prototypes (callback wrappers for InputHandler)
 void startTimer(uint32_t duration);
 void pauseTimer();
 void resumeTimer();
 void resetTimer();
+
+// NVS persistence
+Preferences preferences;
+
+void loadSettings() {
+    preferences.begin("pomodoro", true);
+    settings.workDuration = preferences.getUShort("workDur", 25 * 60);
+    settings.shortBreakDuration = preferences.getUShort("shortBreak", 5 * 60);
+    settings.longBreakDuration = preferences.getUShort("longBreak", 25 * 60);
+    settings.pomodorosUntilLongBreak = preferences.getUChar("pomosLong", 4);
+    settings.brightnessLevel = preferences.getUChar("brightness", 3);
+    settings.screenFlipped = preferences.getBool("flipped", false);
+    preferences.end();
+    Serial.println("Settings loaded from NVS");
+}
+
+void saveSettings() {
+    preferences.begin("pomodoro", false);
+    preferences.putUShort("workDur", settings.workDuration);
+    preferences.putUShort("shortBreak", settings.shortBreakDuration);
+    preferences.putUShort("longBreak", settings.longBreakDuration);
+    preferences.putUChar("pomosLong", settings.pomodorosUntilLongBreak);
+    preferences.putUChar("brightness", settings.brightnessLevel);
+    preferences.putBool("flipped", settings.screenFlipped);
+    preferences.end();
+    Serial.println("Settings saved to NVS");
+}
 
 void setup() {
     Serial.begin(115200);
@@ -67,12 +98,19 @@ void setup() {
         }
     }
     
+    // Load saved settings from NVS (before applying brightness/rotation)
+    loadSettings();
+    
     M5Dial.Display.setBrightness((settings.brightnessLevel * 255) / 6);
-    M5Dial.Display.setRotation(0);
+    M5Dial.Display.setRotation(settings.screenFlipped ? 2 : 0);
     M5Dial.Display.fillScreen(COLOR_WORK_BG); // Start with red background
     
     // Initialize input handler
     inputHandler.init();
+    
+    // Initialize MQTT (non-blocking WiFi connect + broker)
+    mqttManager.init();
+    mqttManager.publishSettings(settings);
     
     // Draw initial screen
     needsRedraw = true;
@@ -102,6 +140,12 @@ void loop() {
     inputHandler.processInput(currentState, settings, settingsMenuIndex, settingsEditing,
                               timerRemaining, timerDuration, needsRedraw,
                               startTimer, pauseTimer, resumeTimer, resetTimer);
+    
+    // Persist settings to NVS when exiting settings menu
+    if (oldState == STATE_SETTINGS && currentState != STATE_SETTINGS) {
+        saveSettings();
+        mqttManager.publishSettings(settings);
+    }
     
     // Only sync back if we're in IDLE state (encoder adjustments)
     // If reset happened (state changed to IDLE), re-read values instead
@@ -182,6 +226,14 @@ void loop() {
         #if ENABLE_PERFORMANCE_MONITOR
         skippedFrames++;
         #endif
+    }
+    
+    // MQTT: maintain connection and publish state changes
+    mqttManager.update();
+    mqttManager.publishState(currentState);
+    mqttManager.publishCompleted(completedPomodoros);
+    if (currentState == STATE_RUNNING || currentState == STATE_SHORT_BREAK || currentState == STATE_LONG_BREAK) {
+        mqttManager.publishRemaining(currentRemaining);
     }
     
     // Performance monitoring: Periodic reporting
